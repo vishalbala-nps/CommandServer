@@ -53,7 +53,14 @@ app.get('/stoptimer', function(req, res){
    })
    return res.json({text:"success"})
 });
-
+app.get('/resettimer', function(req, res){
+   displayClients.find(function(obj,index) {
+      if (obj.name === req.query.name) {
+         obj.sobj.emit("timer:reset")
+      }
+   })
+   return res.json({text:"success"})
+});
 //Whenever someone connects this gets executed
 io.on('connection', function(socket){
    console.log('A user connected');
