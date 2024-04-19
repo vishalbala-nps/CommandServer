@@ -77,6 +77,9 @@ io.on('connection', function(socket){
          }
       })
    });
+   socket.on("timer:end",function(name) {
+      console.log(name+" - timer is complete")
+   })
 });
 http.listen(4000, function(){
    console.log('listening on *:4000');
