@@ -6,12 +6,12 @@ let io = require('socket.io')(http, {
        origin: "http://localhost:3000"
    }
 });
-let clients = [];
+let displayClients = [];
 
 app.use(cors());
 
 app.get('/', function(req, res){
-   clients.forEach(function(value) {
+   displayClients.forEach(function(value) {
       console.log(value.name)
    })
    res.json({
@@ -19,18 +19,53 @@ app.get('/', function(req, res){
     });
 });
 
+app.get('/addtext', function(req, res){
+   displayClients.find(function(obj,index) {
+      if (obj.name === req.query.name) {
+         obj.sobj.emit("text:add",req.query.text)
+      }
+   })
+   return res.json({text:"success"})
+});
+
+app.get('/settimer', function(req, res){
+   displayClients.find(function(obj,index) {
+      if (obj.name === req.query.name) {
+         obj.sobj.emit("timer:set",req.query.time)
+      }
+   })
+   return res.json({text:"success"})
+});
+
+app.get('/starttimer', function(req, res){
+   displayClients.find(function(obj,index) {
+      if (obj.name === req.query.name) {
+         obj.sobj.emit("timer:start")
+      }
+   })
+   return res.json({text:"success"})
+});
+app.get('/stoptimer', function(req, res){
+   displayClients.find(function(obj,index) {
+      if (obj.name === req.query.name) {
+         obj.sobj.emit("timer:stop")
+      }
+   })
+   return res.json({text:"success"})
+});
+
 //Whenever someone connects this gets executed
 io.on('connection', function(socket){
    console.log('A user connected');
    socket.on('client:join', function (name) {
-      clients.push({name:name,sobj:socket})
+      displayClients.push({name:name,sobj:socket})
       socket.emit("join:success",name)
    });
    socket.on('disconnect', function () {
-      clients.find(function(obj,index) {
+      displayClients.find(function(obj,index) {
          if (obj.sobj === socket) {
             console.log(obj.name+" disconnected")
-            clients.splice(index,1)
+            displayClients.splice(index,1)
             return true
          }
       })
