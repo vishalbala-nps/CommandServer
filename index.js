@@ -24,6 +24,7 @@ io.on('connection', function(socket){
    console.log('A user connected');
    socket.on('client:join', function (name) {
       clients.push({name:name,sobj:socket})
+      socket.emit("join:success",name)
    });
    socket.on('disconnect', function () {
       clients.find(function(obj,index) {
