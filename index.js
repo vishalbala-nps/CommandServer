@@ -11,9 +11,6 @@ let displayClients = [];
 app.use(cors());
 
 app.get('/', function(req, res){
-   displayClients.forEach(function(value) {
-      console.log(value.name)
-   })
    res.json({
       message: 'Hello world',
     });
