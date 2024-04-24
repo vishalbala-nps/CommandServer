@@ -111,6 +111,9 @@ io.on('connection', function(socket){
    })
    socket.on("req:hint",function(name) {
       console.log(name+" - requested for hint")
+      controllers.find(function(obj,index) {
+         obj.sobj.emit("req:hint",name)
+      })
    })
 });
 http.listen(4000, function(){
