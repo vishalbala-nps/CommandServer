@@ -6,9 +6,14 @@ let io = require('socket.io')(http, {
        origin: ["http://localhost:3000","http://localhost:8080","http://192.168.1.13:3000","http://192.168.1.13:8080"]
    }
 });
+const { createAdapter } = require("@socket.io/cluster-adapter");
+const { setupWorker } = require("@socket.io/sticky");
+
 let displayClients = [];
 let controllers = []
 app.use(cors());
+io.adapter(createAdapter());
+setupWorker(io);
 
 app.get('/', function(req, res){
    res.json({
@@ -115,7 +120,7 @@ io.on('connection', function(socket){
          obj.sobj.emit("req:hint",name)
       })
    })
-});
+});/*
 http.listen(4000, function(){
    console.log('listening on *:4000');
-});
+});*/
