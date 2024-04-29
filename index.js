@@ -3,7 +3,7 @@ let http = require('http').Server(app);
 const cors = require('cors');
 let io = require('socket.io')(http, {
    cors: {
-       origin: ["http://localhost:3000","http://localhost:8080","http://192.168.1.13:3000","http://192.168.1.13:8080"]
+       origin: ["http://localhost:8081","http://localhost:8082"]
    }
 });
 const { createAdapter } = require("@socket.io/cluster-adapter");
