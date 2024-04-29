@@ -3,7 +3,7 @@ let http = require('http').Server(app);
 const cors = require('cors');
 let io = require('socket.io')(http, {
    cors: {
-       origin: ["http://localhost:8081","http://localhost:8082"]
+       origin: ["http://localhost:8081","http://localhost:8082","http://192.168.1.13:8081","http://192.168.1.13:8082"]
    }
 });
 const { createAdapter } = require("@socket.io/cluster-adapter");
@@ -94,6 +94,18 @@ io.on('connection', function(socket){
       controllers.push({name:name,sobj:socket})
       socket.emit("join:success",name)
    });
+   socket.on('control:rejoin', function (name) {
+      console.log(name+" is reconnecting")
+      controllers.find(function(obj,index) {
+         if (obj.name === name) {
+            console.log("found existing entry! deleting it")
+            controllers.splice(index,1)
+            return true
+         }
+      })
+      controllers.push({name:name,sobj:socket})
+      socket.emit("join:success",name)
+   });
    socket.on('disconnect', function () {
       let leftname;
       displayClients.find(function(obj,index) {
@@ -120,7 +132,7 @@ io.on('connection', function(socket){
          obj.sobj.emit("req:hint",name)
       })
    })
-});/*
-http.listen(4000, function(){
+});
+/*http.listen(4000, function(){
    console.log('listening on *:4000');
 });*/
